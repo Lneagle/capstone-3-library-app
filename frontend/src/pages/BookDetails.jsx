@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchBook } from "../services/openLibraryFetches";
-import { useParams } from "react-router-dom";
 
-function BookDetails() {
-	const { id } = useParams();
+function BookDetails({ book, setShowDetails }) {
 	const [details, setDetails] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
@@ -13,7 +11,7 @@ function BookDetails() {
       try {
 				setIsLoading(true);
 				setError(null);
-				const data = await fetchBook(`/works/${id}`);
+				const data = await fetchBook(book.key);
         setDetails(data);
       } catch (err) {
         setError(err);
@@ -23,19 +21,34 @@ function BookDetails() {
     };
 
 		getDetails();
-  }, [id]);
+  }, [book]);
+
+	const handleClose = () => {
+		setShowDetails(false);
+	}
 
 	return (
-		<>
-      {isLoading && <p className="message">Fetching data...</p>}
-			{error && <p className="error">{error.message}</p>}
-			{details && 
-				<>
-					<h3>{details.title}</h3>
-					{details.covers && <img src={`https://covers.openlibrary.org/b/id/${details.covers[0]}-M.jpg`} alt={`${details.title} cover image`} />}
-					{details.author_name && <p>{details.author_name.join(', ')}</p>}
-				</>}
-		</>
+		<div className="modal-container">
+      <div className="modal">
+				<button className="close" onClick={handleClose}>X</button>
+				{isLoading && <p className="message">Fetching data...</p>}
+				{error && <p className="error">{error.message}</p>}
+				{details && 
+					<div className="content">
+						<div>
+							<h3>{details.title}</h3>
+							{details.covers && <img src={`https://covers.openlibrary.org/b/id/${details.covers[0]}-M.jpg`} alt={`${details.title} cover image`} />}
+							{book.author_name && <p>{book.author_name.join(', ')}</p>}
+						</div>
+						<div>
+							{details.description && <p>{details.description.value}</p>}
+							<button>I've Read This</button>
+							<button>I Want to Read This</button>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
 	)
 }
 
