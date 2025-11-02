@@ -35,7 +35,7 @@ class Book(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	title = db.Column(db.String, nullable=False)
 	cover_image = db.Column(db.String)
-	olid = db.Column(db.String)
+	olid = db.Column(db.String, nullable=False)
 	description = db.Column(db.String)
 	rating = db.Column(db.Float)
 

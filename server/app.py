@@ -3,7 +3,7 @@
 from config import app, db, api
 from routes import *
 
-api.add_resource(AllAuthors, '/authors', endpoint='/authors')
+api.add_resource(BookIndex, '/books', endpoint='/books')
 
 if __name__ == '__main__':
   app.run(port=5555, debug=True)
