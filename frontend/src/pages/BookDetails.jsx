@@ -41,7 +41,7 @@ function BookDetails({ book, setShowDetails }) {
 							{book.author_name && <p>{book.author_name.join(', ')}</p>}
 						</div>
 						<div>
-							{details.description && <p>{details.description.value}</p>}
+							{details.description && <p>{typeof details.description == 'string' ? details.description : details.description.value}</p>}
 							<button>I've Read This</button>
 							<button>I Want to Read This</button>
 						</div>
