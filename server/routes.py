@@ -24,7 +24,8 @@ def create_or_return_author(author_obj):
 def create_book(book_obj):
 	book_title = book_obj['title']
 	book_olid = book_obj['olid']
-	book_cover = f'https://covers.openlibrary.org/b/id/{book_obj['cover_image']}-M.jpg' if book_obj['cover_image'] else 'https://placehold.co/180x290.png?text=No%20Image'
+	#book_cover = f'https://covers.openlibrary.org/b/id/{book_obj['cover_image']}-M.jpg' if book_obj['cover_image'] else 'https://placehold.co/180x290.png?text=No%20Image'
+	book_cover = book_obj['cover_image']
 	book_description = book_obj['description']
 	book_rating = book_obj['rating']
 	authors = book_obj['authors']
