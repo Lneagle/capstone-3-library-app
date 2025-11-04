@@ -16,7 +16,7 @@ export const fetchSearchResults = async (searchTerm) => {
 	}
 }
 
-export const fetchBook = async (key) => {
+export const fetchOLBook = async (key) => {
 	try {
 		const response = await fetch(`${MAIN_URL}${key}.json`);
 		if (!response.ok) {

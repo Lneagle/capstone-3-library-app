@@ -1,4 +1,5 @@
 import { useState } from "react";
+import NavBar from "../components/NavBar";
 import BookList from "../components/BookList";
 import { fetchSearchResults } from "../services/openLibraryFetches";
 
@@ -57,6 +58,7 @@ function BookSearch() {
 
 	return (
 		<>
+			<NavBar />
       <h1>Book Search</h1>
 			<form id="book-search" onSubmit={handleSubmit}>
 				<label htmlFor="title">Title:</label>
@@ -81,7 +83,7 @@ function BookSearch() {
 
 			{isLoading && <p className="message">Fetching data...</p>}
 			{error && <p className="error">{error.message}</p>}
-			{searchResults && <BookList books={searchResults.docs} />}
+			{searchResults && <BookList books={searchResults.docs} fromDB={false} />}
 		</>
 	)
 }

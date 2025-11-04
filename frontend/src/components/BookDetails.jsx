@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchBook } from "../services/openLibraryFetches";
+import { fetchOLBook } from "../services/openLibraryFetches";
+import { fetchDBBook } from "../services/localFetches";
 
-function BookDetails({ book, setShowDetails }) {
+function BookDetails({ book, setShowDetails, fromDB }) {
 	const [details, setDetails] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
@@ -11,7 +12,13 @@ function BookDetails({ book, setShowDetails }) {
       try {
 				setIsLoading(true);
 				setError(null);
-				const data = await fetchBook(book.key);
+				let data;
+				if (fromDB) {
+					data = await fetchDBBook(book.id);
+					data = data.data;
+				} else {
+					data = await fetchOLBook(book.key);
+				}
         setDetails(data);
       } catch (err) {
         setError(err);
@@ -21,7 +28,7 @@ function BookDetails({ book, setShowDetails }) {
     };
 
 		getDetails();
-  }, [book]);
+  }, [book, fromDB]);
 
 	const handleClose = () => {
 		setShowDetails(false);
@@ -37,8 +44,8 @@ function BookDetails({ book, setShowDetails }) {
 					<div className="content">
 						<div>
 							<h3>{details.title}</h3>
-							{details.covers && <img src={`https://covers.openlibrary.org/b/id/${details.covers[0]}-M.jpg`} alt={`${details.title} cover image`} />}
-							{book.author_name && <p>{book.author_name.join(', ')}</p>}
+							<img src={details.covers ? `https://covers.openlibrary.org/b/id/${details.covers[0]}-M.jpg` : (book.cover_image ? book.cover_image : 'https://placehold.co/180x290.png?text=No%20Image')} alt={`${details.title} cover image`} />
+							<p>{book.author_name ? book.author_name.join(', ') : book.authors.map((author) => author.name).join(', ')}</p>
 						</div>
 						<div>
 							{details.description && <p>{typeof details.description == 'string' ? details.description : details.description.value}</p>}

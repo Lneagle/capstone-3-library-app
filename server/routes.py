@@ -78,6 +78,15 @@ class BookIndex(Resource):
 		else:
 			return create_book_response
 		
+class BookById(Resource):
+	def get(self, id):
+		book = Book.query.filter_by(id=id).first()
+
+		if book:
+			return success_response(BookSchema().dump(book))
+		else:
+			return error_response('Book not found', 404)
+		
 class ListEntriesByList(Resource):
 	def get(self, user_id, list_type):
 		list_entries = ListEntry.query.filter_by(user_id=user_id, list_type=list_type).all()

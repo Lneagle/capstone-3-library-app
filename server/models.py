@@ -94,5 +94,5 @@ class ListEntrySchema(Schema):
 	list_type = fields.String()
 	notes = fields.String()
 
-	book = fields.Nested(BookSchema(only=('id', 'title')))
+	book = fields.Nested(BookSchema(exclude=('list_entries',)))
 	user = fields.Nested(UserSchema(only=('id', 'name')))
