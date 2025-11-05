@@ -95,8 +95,8 @@ class ListEntriesByList(Resource):
 		if not list_entries:
 			return error_response('No entries found', 404)
 		
-		if list_type not in ['have_read', 'want_to_read']:
-			return error_response('List type must be "have_read" or "want_to_read"', 400)
+		if list_type not in ['have-read', 'want-to-read']:
+			return error_response('List type must be "have-read" or "want-to-read"', 400)
 		
 		# Do user_id check
 
@@ -105,8 +105,8 @@ class ListEntriesByList(Resource):
 	def post(self, user_id, list_type):
 		request_json = request.get_json()
 
-		if list_type not in ['have_read', 'want_to_read']:
-			return error_response('List type must be "have_read" or "want_to_read"', 400)
+		if list_type not in ['have-read', 'want-to-read']:
+			return error_response('List type must be "have-read" or "want-to-read"', 400)
 		
 		# Do user_id check
 
@@ -135,6 +135,32 @@ class ListEntriesByList(Resource):
 			db.session.add(new_entry)
 			db.session.commit()
 			return success_response(ListEntrySchema().dump(new_entry))
+		except IntegrityError as e:
+			db.session.rollback()
+			return error_response('Database constraint violation', 422)
+		
+class ListEntryById(Resource):
+	def patch(self, user_id, list_type, entry_id):
+		request_json = request.get_json()
+
+		if list_type not in ['have-read', 'want-to-read']:
+			return error_response('List type must be "have-read" or "want-to-read"', 400)
+		
+		# Do user_id check
+
+		if not request_json:
+			return error_response('Request body required', 400)
+		
+		list_entry = ListEntry.query.filter_by(id=entry_id).first()
+
+		if list_entry.user_id != user_id:
+			return error_response('User not authorized to view this entry', 403)
+		
+		try:
+			for attr in request_json:
+				setattr(list_entry, attr, request_json[attr])
+			db.session.commit()
+			return success_response(ListEntrySchema().dump(list_entry))
 		except IntegrityError as e:
 			db.session.rollback()
 			return error_response('Database constraint violation', 422)
