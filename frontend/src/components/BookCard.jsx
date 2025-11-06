@@ -1,6 +1,9 @@
-function BookCard({ book, setSelectedBook, setShowDetails }) {
+function BookCard({ listEntry, book, setSelectedEntry, setSelectedBook, setShowDetails }) {
 	const handleViewDetails = () => {
 		setSelectedBook(book);
+		if (listEntry) {
+			setSelectedEntry(listEntry);
+		}
 		setShowDetails(true);
 	}
 

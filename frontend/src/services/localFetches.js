@@ -3,7 +3,7 @@ const USER_ID = 1; //replace later
 
 export const fetchWantToRead = async () => {
   try {
-    const response = await fetch(`${API_URL}/users/${USER_ID}/lists/want_to_read`);
+    const response = await fetch(`${API_URL}/users/${USER_ID}/lists/want-to-read/entries`);
     if (!response.ok) {
       throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
     }
@@ -17,7 +17,7 @@ export const fetchWantToRead = async () => {
 
 export const fetchHaveRead = async () => {
   try {
-    const response = await fetch(`${API_URL}/users/${USER_ID}/lists/have_read`);
+    const response = await fetch(`${API_URL}/users/${USER_ID}/lists/have-read/entries`);
     if (!response.ok) {
       throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
     }
@@ -31,7 +31,7 @@ export const fetchHaveRead = async () => {
 
 export const postToList = async (list_type, body) => {
 	try {
-		const response = await fetch(`${API_URL}/users/${USER_ID}/lists/${list_type}`, {
+		const response = await fetch(`${API_URL}/users/${USER_ID}/lists/${list_type}/entries`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,6 +48,40 @@ export const postToList = async (list_type, body) => {
     throw error;
   }
 }
+
+export const patchListEntry = async (list_type, entry_id, body) => {
+	try {
+		const response = await fetch(`${API_URL}/users/${USER_ID}/lists/${list_type}/entries/${entry_id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
+    if (!response.ok) {
+      throw new Error(`Could not edit entry ${entry_id}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+export const deleteListEntry = async(list_type, entry_id) => {
+  try {
+    const response = await fetch(`${API_URL}/users/${USER_ID}/lists/${list_type}/entries/${entry_id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error(`Could not delete entry`);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+};
 
 export const fetchDBBook = async (id) => {
 	try {

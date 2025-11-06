@@ -145,8 +145,6 @@ class ListEntryById(Resource):
 
 		if list_type not in ['have-read', 'want-to-read']:
 			return error_response('List type must be "have-read" or "want-to-read"', 400)
-		
-		# Do user_id check
 
 		if not request_json:
 			return error_response('Request body required', 400)
@@ -161,6 +159,23 @@ class ListEntryById(Resource):
 				setattr(list_entry, attr, request_json[attr])
 			db.session.commit()
 			return success_response(ListEntrySchema().dump(list_entry))
+		except IntegrityError as e:
+			db.session.rollback()
+			return error_response('Database constraint violation', 422)
+		
+	def delete(self, user_id, list_type, entry_id):
+		if list_type not in ['have-read', 'want-to-read']:
+			return error_response('List type must be "have-read" or "want-to-read"', 400)
+		
+		list_entry = ListEntry.query.filter_by(id=entry_id).first()
+		
+		if list_entry.user_id != user_id:
+			return error_response('User not authorized to delete this entry', 403)
+
+		try:
+			db.session.delete(list_entry)
+			db.session.commit()
+			return success_response(None, 204)
 		except IntegrityError as e:
 			db.session.rollback()
 			return error_response('Database constraint violation', 422)

@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { fetchOLBook } from "../services/openLibraryFetches";
-import { fetchDBBook, postToList } from "../services/localFetches";
+import { deleteListEntry, fetchDBBook, patchListEntry, postToList } from "../services/localFetches";
 
-function BookDetails({ book, setShowDetails, fromDB }) {
+function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, setListChanged }) {
 	const [details, setDetails] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
+	const [editNotes, setEditNotes] = useState(false);
+	const [notes, setNotes] = useState(entry ? entry.notes : '');
+	const location = useLocation();
 	
 	useEffect(() => {
     const getDetails = async () => {
@@ -35,30 +39,71 @@ function BookDetails({ book, setShowDetails, fromDB }) {
 	}
 
 	const handleAdd = async (list_type) => {
-		const olid = book.olid || book.key.substring(7)
-		const cover_image = document.querySelector('.modal img').src;
-		const description = details.description ? (typeof details.description == 'string' ? details.description : details.description.value) : null;
-		const rating = book.ratings_average || details.rating || null;
-		let authors;
-		if (details.authors && details.authors[0]['olid']) {
-			authors = details.authors;
+		if (location.pathname == '/want-to-read' && list_type == 'have-read') {
+			try {
+				const body = JSON.stringify({"list_type": "have-read"});
+				const updated_entry = await patchListEntry('want-to-read', entry.id, body);
+				document.querySelector('.modal-action').innerHTML = `Added to "Books I've Read"`;
+				setTimeout(handleClose, 3000);
+				setListChanged(true);
+			} catch (err) {
+				setError(err);
+			}
 		} else {
-			authors = book.author_name.map((element, index) => {
-				return {"name": element, "olid": book.author_key[index]}
-			})
-		}
-		
-		const body = JSON.stringify({
-			"title": book.title,
-			"cover_image": cover_image,
-			"olid": olid,
-			"description": description,
-			"rating": rating,
-			"authors": authors
-		});
+			const olid = book.olid || book.key.substring(7)
+			const cover_image = document.querySelector('.modal img').src;
+			const description = details.description ? (typeof details.description == 'string' ? details.description : details.description.value) : null;
+			const rating = book.ratings_average || details.rating || null;
+			let authors;
+			if (details.authors && details.authors[0]['olid']) {
+				authors = details.authors;
+			} else {
+				authors = book.author_name.map((element, index) => {
+					return {"name": element, "olid": book.author_key[index]}
+				})
+			}
+			
+			const body = JSON.stringify({
+				"title": book.title,
+				"cover_image": cover_image,
+				"olid": olid,
+				"description": description,
+				"rating": rating,
+				"authors": authors
+			});
 
+			try {
+				await postToList(list_type, body);
+				document.querySelector('.modal-action').innerHTML = `Added to "${list_type == 'want-to-read' ? 'Books I Want to Read' : 'Books I\'ve Read'}"`;
+				setTimeout(handleClose, 3000);
+			} catch (err) {
+				setError(err);
+			}
+		}
+	}
+
+	const handleNotesChange = (event) => {
+		setNotes(event.target.value);
+	}
+
+	const handleNotesSubmit = async (event) => {
+		event.preventDefault();
+		const body = JSON.stringify({"notes": notes});
 		try {
-			await postToList(list_type, body);
+			const updated_entry = await patchListEntry('have-read', entry.id, body);
+			setSelectedEntry(updated_entry.data);
+		} catch (err) {
+			setError(err);
+		} finally {
+			setEditNotes(false);
+		}
+	}
+
+	const handleDelete = async () => {
+		try {
+			await deleteListEntry(location.pathname.substring(1), entry.id);
+			setTimeout(handleClose, 3000);
+			setListChanged(true);
 		} catch (err) {
 			setError(err);
 		}
@@ -79,8 +124,19 @@ function BookDetails({ book, setShowDetails, fromDB }) {
 						</div>
 						<div>
 							{details.description && <p>{typeof details.description == 'string' ? details.description : details.description.value}</p>}
-							<button onClick={() => handleAdd('have_read')}>I've Read This</button>
-							<button onClick={() => handleAdd('want_to_read')}>I Want to Read This</button>
+							<p className="modal-action">
+								{location.pathname != '/have-read' && <button onClick={() => handleAdd('have-read')}>I've Read This</button>}
+								{location.pathname == '/' && <button onClick={() => handleAdd('want-to-read')}>I Want to Read This</button>}
+								{location.pathname != '/' && <button onClick={handleDelete}>Delete</button>}
+							</p>
+							{location.pathname == '/have-read' && <div>
+								{entry.notes && !editNotes && <p>{entry.notes}</p>}
+								{editNotes && <form onSubmit={handleNotesSubmit}>
+									<textarea id="bookNotes" value={notes} onChange={handleNotesChange}></textarea>	
+									<input type="submit" value="Save" />
+								</form>}
+								{!editNotes && <button onClick={() => setEditNotes(true)}>{entry.notes ? 'Edit Notes' : 'Add Notes'}</button>}
+							</div>}
 						</div>
 					</div>
 				}
