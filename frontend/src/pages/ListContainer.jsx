@@ -11,6 +11,7 @@ function ListContainer() {
 	const [error, setError] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedSort, setSelectedSort] = useState('');
+	const [searchTerm, setSearchTerm] = useState('');
 
 	useEffect(() => {
     const getList = async () => {
@@ -40,7 +41,11 @@ function ListContainer() {
 
 	let sortedEntries;
 	if (entries) {
-		sortedEntries = [...entries];
+		sortedEntries = entries.filter(entry => {
+			return entry.book.title.toLowerCase().includes(searchTerm.toLowerCase()) || entry.book.authors.filter(author => {
+				return author.name.toLowerCase().includes(searchTerm.toLowerCase())
+			}).length > 0
+		});
 
 		sortedEntries.sort((a, b) => {
 			if (selectedSort == 'title') {
@@ -71,6 +76,10 @@ function ListContainer() {
 		setSelectedSort(event.target.value);
 	}
 
+	const handleSearchChange = (event) => {
+		setSearchTerm(event.target.value);
+	}
+
 	return (
 		<>
 			<NavBar />
@@ -90,6 +99,9 @@ function ListContainer() {
 							<option value='author'>Author (full name)</option>
 							<option value='rating'>Rating (high to low)</option>
 						</select>
+
+						<label htmlFor="search">Search</label>
+						<input type="text" id="search" value={searchTerm} onChange={handleSearchChange} />
 					</form>
 					<BookList books={sortedEntries} fromDB={true} />
 				</>
