@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { fetchOLBook } from "../services/openLibraryFetches";
 import { deleteListEntry, fetchDBBook, patchListEntry, postToList } from "../services/localFetches";
 
-function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB }) {
+function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, removeEntry }) {
 	const [details, setDetails] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
@@ -42,9 +42,10 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB }) 
 		if (location.pathname == '/want-to-read' && list_type == 'have-read') {
 			try {
 				const body = JSON.stringify({"list_type": "have-read"});
-				const updated_entry = await patchListEntry('want-to-read', entry.id, body);
+				await patchListEntry('want-to-read', entry.id, body);
 				document.querySelector('.modal-action').innerHTML = `Added to "Books I've Read"`;
 				setTimeout(handleClose, 2500);
+				removeEntry(entry.id);
 			} catch (err) {
 				setError(err);
 			}
@@ -103,6 +104,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB }) 
 			await deleteListEntry(location.pathname.substring(1), entry.id);
 			document.querySelector('.modal-action').innerHTML = 'Entry deleted';
 			setTimeout(handleClose, 1500);
+			removeEntry(entry.id);
 		} catch (err) {
 			setError(err);
 		}

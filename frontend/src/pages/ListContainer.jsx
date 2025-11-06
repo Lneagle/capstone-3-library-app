@@ -103,7 +103,7 @@ function ListContainer() {
 						<label htmlFor="search">Search</label>
 						<input type="text" id="search" value={searchTerm} onChange={handleSearchChange} />
 					</form>
-					<BookList books={sortedEntries} fromDB={true} />
+					<BookList books={sortedEntries} setEntries={setEntries} fromDB={true} />
 				</>
 			}
 		</>

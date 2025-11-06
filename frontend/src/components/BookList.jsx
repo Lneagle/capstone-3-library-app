@@ -2,10 +2,16 @@ import { useState } from "react";
 import BookCard from "./BookCard";
 import BookDetails from "./BookDetails";
 
-function BookList({ books, fromDB }) { // 'books' are actually list entries if they come from the DB
+function BookList({ books, setEntries, fromDB }) { // 'books' are actually list entries if they come from the DB
 	const [showDetails, setShowDetails] = useState(false);
 	const [selectedBook, setSelectedBook] = useState(null);
 	const [selectedEntry, setSelectedEntry] = useState(null);
+
+	const removeEntry = (id) => {
+		setEntries(books.filter(item => {
+			return item.id != id;
+		}))
+	}
 
 	return (
 		<div className="book-list">
@@ -13,7 +19,7 @@ function BookList({ books, fromDB }) { // 'books' are actually list entries if t
 				<BookCard key={fromDB ? book.book.olid : book.key.substring(7)} listEntry={fromDB ? book : null} book={fromDB ? book.book : book} setSelectedEntry={setSelectedEntry} setSelectedBook={setSelectedBook} setShowDetails={setShowDetails} />
 			))}
 
-			{showDetails && <BookDetails entry={selectedEntry} setSelectedEntry={setSelectedEntry} book={selectedBook} setShowDetails={setShowDetails} fromDB={fromDB} />}
+			{showDetails && <BookDetails entry={selectedEntry} setSelectedEntry={setSelectedEntry} book={selectedBook} setShowDetails={setShowDetails} fromDB={fromDB} removeEntry={removeEntry} />}
 		</div>
 	)
 }
