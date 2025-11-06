@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { fetchOLBook } from "../services/openLibraryFetches";
 import { deleteListEntry, fetchDBBook, patchListEntry, postToList } from "../services/localFetches";
 
-function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, setListChanged }) {
+function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB }) {
 	const [details, setDetails] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
@@ -44,8 +44,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, se
 				const body = JSON.stringify({"list_type": "have-read"});
 				const updated_entry = await patchListEntry('want-to-read', entry.id, body);
 				document.querySelector('.modal-action').innerHTML = `Added to "Books I've Read"`;
-				setTimeout(handleClose, 3000);
-				setListChanged(true);
+				setTimeout(handleClose, 2500);
 			} catch (err) {
 				setError(err);
 			}
@@ -75,7 +74,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, se
 			try {
 				await postToList(list_type, body);
 				document.querySelector('.modal-action').innerHTML = `Added to "${list_type == 'want-to-read' ? 'Books I Want to Read' : 'Books I\'ve Read'}"`;
-				setTimeout(handleClose, 3000);
+				setTimeout(handleClose, 2500);
 			} catch (err) {
 				setError(err);
 			}
@@ -102,8 +101,8 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, se
 	const handleDelete = async () => {
 		try {
 			await deleteListEntry(location.pathname.substring(1), entry.id);
-			setTimeout(handleClose, 3000);
-			setListChanged(true);
+			document.querySelector('.modal-action').innerHTML = 'Entry deleted';
+			setTimeout(handleClose, 1500);
 		} catch (err) {
 			setError(err);
 		}
