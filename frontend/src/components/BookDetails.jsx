@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { fetchOLBook } from "../services/openLibraryFetches";
 import { deleteListEntry, fetchDBBook, patchListEntry, postToList } from "../services/localFetches";
+import { AuthContext } from "./AuthContext";
 
 function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, removeEntry }) {
 	const [details, setDetails] = useState(null);
@@ -10,26 +11,27 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 	const [editNotes, setEditNotes] = useState(false);
 	const [notes, setNotes] = useState(entry ? entry.notes : '');
 	const location = useLocation();
+	const context = useContext(AuthContext);
 	
 	useEffect(() => {
-    const getDetails = async () => {
-      try {
+		const getDetails = async () => {
+			try {
 				setIsLoading(true);
 				setError(null);
 				let data;
 				if (fromDB) {
-					data = await fetchDBBook(book.id);
+					data = await fetchDBBook(book.id, context);
 					data = data.data;
 				} else {
 					data = await fetchOLBook(book.key);
 				}
-        setDetails(data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+				setDetails(data);
+			} catch (err) {
+				setError(err);
+			} finally {
+				setIsLoading(false);
+			}
+		};
 
 		getDetails();
   }, [book, fromDB]);
@@ -42,7 +44,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 		if (location.pathname == '/want-to-read' && list_type == 'have-read') {
 			try {
 				const body = JSON.stringify({"list_type": "have-read"});
-				await patchListEntry('want-to-read', entry.id, body);
+				await patchListEntry('want-to-read', entry.id, body, context);
 				document.querySelector('.modal-action').innerHTML = `Added to "Books I've Read"`;
 				setTimeout(handleClose, 2500);
 				removeEntry(entry.id);
@@ -73,7 +75,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 			});
 
 			try {
-				await postToList(list_type, body);
+				await postToList(list_type, body, context);
 				document.querySelector('.modal-action').innerHTML = `Added to "${list_type == 'want-to-read' ? 'Books I Want to Read' : 'Books I\'ve Read'}"`;
 				setTimeout(handleClose, 2500);
 			} catch (err) {
@@ -90,7 +92,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 		event.preventDefault();
 		const body = JSON.stringify({"notes": notes});
 		try {
-			const updated_entry = await patchListEntry('have-read', entry.id, body);
+			const updated_entry = await patchListEntry('have-read', entry.id, body, context);
 			setSelectedEntry(updated_entry.data);
 		} catch (err) {
 			setError(err);
@@ -101,7 +103,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 
 	const handleDelete = async () => {
 		try {
-			await deleteListEntry(location.pathname.substring(1), entry.id);
+			await deleteListEntry(location.pathname.substring(1), entry.id, context);
 			document.querySelector('.modal-action').innerHTML = 'Entry deleted';
 			setTimeout(handleClose, 1500);
 			removeEntry(entry.id);
@@ -122,6 +124,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 							<h3>{details.title}</h3>
 							<img src={details.covers ? `https://covers.openlibrary.org/b/id/${details.covers[0]}-M.jpg` : (book.cover_image ? book.cover_image : 'https://placehold.co/180x290.png?text=No%20Image')} alt={`${details.title} cover image`} />
 							<p>{book.author_name ? book.author_name.join(', ') : book.authors.map((author) => author.name).join(', ')}</p>
+							{book.rating &&<p>Rating: {book.rating.toFixed(2)}</p>}
 						</div>
 						<div>
 							{details.description && <p>{typeof details.description == 'string' ? details.description : details.description.value}</p>}

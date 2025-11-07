@@ -83,7 +83,7 @@ function BookSearch() {
 
 			{isLoading && <p className="message">Fetching data...</p>}
 			{error && <p className="error">{error.message}</p>}
-			{searchResults && <BookList books={searchResults.docs} fromDB={false} />}
+			{searchResults && <BookList items={searchResults.docs} fromDB={false} />}
 		</>
 	)
 }

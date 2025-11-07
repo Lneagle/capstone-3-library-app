@@ -1,8 +1,9 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import NavBar from "../components/NavBar";
 import BookList from "../components/BookList";
 import { fetchHaveRead, fetchWantToRead } from "../services/localFetches";
+import { AuthContext } from "../components/AuthContext";
 
 function ListContainer() {
 	const params = useParams();
@@ -12,6 +13,7 @@ function ListContainer() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedSort, setSelectedSort] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
+	const context = useContext(AuthContext);
 
 	useEffect(() => {
     const getList = async () => {
@@ -20,9 +22,9 @@ function ListContainer() {
 			try {
 				let data;
 				if (list_type == 'have-read') {
-					data = await fetchHaveRead();
+					data = await fetchHaveRead(context);
 				} else {
-					data = await fetchWantToRead();
+					data = await fetchWantToRead(context);
 				}
 				setEntries(data.data);
 			} catch (err) {
@@ -33,7 +35,7 @@ function ListContainer() {
 		};
 
 		getList();
-  }, [list_type]);
+  }, [list_type, context]);
 
 	if (!['have-read', 'want-to-read'].includes(list_type)){
 		return (<h1>Page Not Found</h1>)
@@ -103,7 +105,7 @@ function ListContainer() {
 						<label htmlFor="search">Search</label>
 						<input type="text" id="search" value={searchTerm} onChange={handleSearchChange} />
 					</form>
-					<BookList books={sortedEntries} setEntries={setEntries} fromDB={true} />
+					<BookList items={sortedEntries} setEntries={setEntries} fromDB={true} />
 				</>
 			}
 		</>

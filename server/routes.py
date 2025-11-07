@@ -1,8 +1,9 @@
 from flask import request, jsonify, make_response
 from flask_restful import Resource
+from flask_jwt_extended import create_access_token, get_jwt_identity, verify_jwt_in_request
 from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError
-from config import db
+from config import db, jwt, app
 from models import *
 from utils import error_response, success_response
 
@@ -24,7 +25,6 @@ def create_or_return_author(author_obj):
 def create_book(book_obj):
 	book_title = book_obj['title']
 	book_olid = book_obj['olid']
-	#book_cover = f'https://covers.openlibrary.org/b/id/{book_obj['cover_image']}-M.jpg' if book_obj['cover_image'] else 'https://placehold.co/180x290.png?text=No%20Image'
 	book_cover = book_obj['cover_image']
 	book_description = book_obj['description']
 	book_rating = book_obj['rating']
@@ -37,7 +37,6 @@ def create_book(book_obj):
 		if book_rating:
 			new_book.rating = book_rating
 		for author in authors:
-			print(author)
 			if not author['name'] or not author['olid']:
 				return error_response('Author name and olid are required for each author', 400)
 			new_book.authors.append(create_or_return_author(author))
@@ -47,6 +46,59 @@ def create_book(book_obj):
 	except IntegrityError as e:
 		db.session.rollback()
 		return error_response('Database constraint violation', 422)
+	
+@app.before_request
+def check_if_logged_in():
+	open_access_list = [
+		'/signup',
+		'/login'
+	]
+	print(request.endpoint)
+	if (request.endpoint) not in open_access_list and (not verify_jwt_in_request()):
+		print(request.headers)
+		print(verify_jwt_in_request())
+		return error_response('Unauthorized', 401)
+	
+class Login(Resource):
+	def post(self):
+		request_json = request.get_json()
+
+		username = request_json.get('username')
+		password = request_json.get('password')
+
+		user = User.query.filter(User.name == username).first()
+
+		if user and user.authenticate(password):
+			token = create_access_token(identity=str(user.id))
+			return make_response(jsonify(token=token, user=UserSchema(exclude=('list_entries',)).dump(user)), 200)
+
+		return error_response('Username or password incorrect', 401)
+	
+class Signup(Resource):
+	def post(self):
+		request_json = request.get_json()
+
+		username = request_json.get('username')
+		password = request_json.get('password')
+
+		user = User(name=username)
+		user.password_hash = password
+
+		try:
+			db.session.add(user)
+			db.session.commit()
+			access_token = create_access_token(identity=str(user.id))
+			return make_response(jsonify(token=access_token, user=UserSchema(exclude=('list_entries',)).dump(user)), 201)
+		except IntegrityError:
+			return error_response('Database constraint violation', 422)
+		
+class WhoAmI(Resource):
+	def get(self):
+		user_id = get_jwt_identity()
+		#user_id = 1
+
+		user = User.query.filter_by(id=user_id).first()
+		return success_response(UserSchema(exclude=('list_entries',)).dump(user))
 
 class BookIndex(Resource):
 	def get(self):
@@ -90,25 +142,25 @@ class BookById(Resource):
 		
 class ListEntriesByList(Resource):
 	def get(self, user_id, list_type):
+		if list_type not in ['have-read', 'want-to-read']:
+			return error_response('List type must be "have-read" or "want-to-read"', 400)
+		
 		list_entries = ListEntry.query.filter_by(user_id=user_id, list_type=list_type).all()
 
 		if not list_entries:
 			return error_response('No entries found', 404)
-		
-		if list_type not in ['have-read', 'want-to-read']:
-			return error_response('List type must be "have-read" or "want-to-read"', 400)
 		
 		# Do user_id check
 
 		return success_response([ListEntrySchema().dump(entry) for entry in list_entries])
 	
 	def post(self, user_id, list_type):
-		request_json = request.get_json()
-
 		if list_type not in ['have-read', 'want-to-read']:
 			return error_response('List type must be "have-read" or "want-to-read"', 400)
 		
 		# Do user_id check
+
+		request_json = request.get_json()
 
 		if not request_json:
 			return error_response('Request body required', 400)
@@ -151,11 +203,14 @@ class ListEntryById(Resource):
 		
 		list_entry = ListEntry.query.filter_by(id=entry_id).first()
 
+		# if not list_entry
+
 		if list_entry.user_id != user_id:
 			return error_response('User not authorized to view this entry', 403)
 		
 		try:
 			for attr in request_json:
+				#verify that attr can be changed
 				setattr(list_entry, attr, request_json[attr])
 			db.session.commit()
 			return success_response(ListEntrySchema().dump(list_entry))
@@ -168,6 +223,8 @@ class ListEntryById(Resource):
 			return error_response('List type must be "have-read" or "want-to-read"', 400)
 		
 		list_entry = ListEntry.query.filter_by(id=entry_id).first()
+
+		# if not list_entry
 		
 		if list_entry.user_id != user_id:
 			return error_response('User not authorized to delete this entry', 403)
