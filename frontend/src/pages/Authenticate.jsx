@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { signUp, login } from "../services/localFetches";
+import { AuthContext } from "../components/AuthContext";
 
 function Authenticate({ type }) {
 	const [username, setUsername] = useState('');
@@ -8,6 +9,7 @@ function Authenticate({ type }) {
 	const [passwordVerify, setPasswordVerify] = useState('');
 	const [error, setError] = useState('');
 	const navigate = useNavigate();
+	const context = useContext(AuthContext);
 
 	const handleUserChange = (event) => {
 		setUsername(event.target.value);
@@ -30,7 +32,7 @@ function Authenticate({ type }) {
 			} else {
 				try {
 					const response = await signUp(JSON.stringify({"username": username, "password": password}));
-					localStorage.setItem("token", response.token);
+					context.login(response);
 					navigate('/');
 				} catch (err) {
 					console.log(err);
@@ -44,7 +46,7 @@ function Authenticate({ type }) {
 		} else {
 			try {
 				const response = await login(JSON.stringify({"username": username, "password": password}));
-				localStorage.setItem("token", response.token);
+				context.login(response);
 				navigate('/');
 			} catch (err) {
 				console.log(err);

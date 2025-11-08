@@ -4,7 +4,6 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 const ProtectedRoute = () => {
   const { token } = useContext(AuthContext);
-	console.log(token);
 
   if (!token) {
     return <Navigate to="/login" replace />;
