@@ -13,6 +13,7 @@ function ListContainer() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedSort, setSelectedSort] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
+	const [numResults, setNumResults] = useState(20);
 	const context = useContext(AuthContext);
 
 	useEffect(() => {
@@ -82,6 +83,10 @@ function ListContainer() {
 		setSearchTerm(event.target.value);
 	}
 
+	const handleNumResultsChange = (event) => {
+		setNumResults(event.target.value);
+	}
+
 	return (
 		<>
 			<NavBar />
@@ -104,8 +109,17 @@ function ListContainer() {
 
 						<label htmlFor="search">Search</label>
 						<input type="text" id="search" value={searchTerm} onChange={handleSearchChange} />
+						
+
+						<label htmlFor="per-page">Results per page:</label>
+						<select id="per-page" value={numResults} onChange={handleNumResultsChange}>
+							<option value={20}>20</option>
+							<option value={30}>30</option>
+							<option value={40}>40</option>
+							<option value={50}>50</option>
+						</select>
 					</form>
-					<BookList items={sortedEntries} setEntries={setEntries} fromDB={true} />
+					<BookList items={sortedEntries} setEntries={setEntries} numResults={numResults} fromDB={true} />
 				</>
 			}
 		</>

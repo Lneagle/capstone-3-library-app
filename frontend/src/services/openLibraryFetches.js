@@ -1,6 +1,6 @@
 const SEARCH_URL = 'https://openlibrary.org/search.json?';
 const MAIN_URL = 'https://openlibrary.org'
-const SEARCH_FIELDS = '&fields=title,key,author_name,author_key,cover_i,ratings_average'
+const SEARCH_FIELDS = '&fields=title,key,author_name,author_key,cover_i,ratings_average&limit=500'
 
 export const fetchSearchResults = async (searchTerm) => {
 	try {

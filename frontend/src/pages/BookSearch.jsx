@@ -43,7 +43,7 @@ function BookSearch() {
 			if (bookSubject) {
 				searchString += `subject=${bookSubject.replace(' ', '+')}&`;
 			}
-			searchString += `limit=${numResults}&page=1`;
+			//searchString += `limit=${numResults}&page=1`;
 			const data = await fetchSearchResults(searchString);
 			setSearchResults(data);
 		} catch (err) {
@@ -83,7 +83,7 @@ function BookSearch() {
 
 			{isLoading && <p className="message">Fetching data...</p>}
 			{error && <p className="error">{error.message}</p>}
-			{searchResults && <BookList items={searchResults.docs} fromDB={false} />}
+			{searchResults && <BookList items={searchResults.docs} numResults={numResults} fromDB={false} />}
 		</>
 	)
 }
