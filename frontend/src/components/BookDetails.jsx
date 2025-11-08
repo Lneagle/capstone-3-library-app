@@ -134,7 +134,12 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 								{location.pathname != '/' && <button onClick={handleDelete}>Delete</button>}
 							</p>
 							{location.pathname == '/have-read' && <div>
-								{entry.notes && !editNotes && <p>{entry.notes}</p>}
+								{entry.notes && !editNotes && 
+								<>
+									<p>My notes:</p>
+									<p>{entry.notes}</p>
+								</>
+								}
 								{editNotes && <form onSubmit={handleNotesSubmit}>
 									<textarea id="bookNotes" value={notes} onChange={handleNotesChange}></textarea>	
 									<input type="submit" value="Save" />

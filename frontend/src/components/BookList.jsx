@@ -24,23 +24,26 @@ function BookList({ items, setEntries, numResults, fromDB }) { // items are book
 	}
 
 	return (
-		<div className="book-list">
-			{totalPages > 1 && <div className="pagination">
-				<button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
-				{Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-					<button key={page} onClick={() => handlePageChange(page)} disabled={currentPage === page}>
-						{page}
-					</button>
+		<>
+			{totalPages > 1 && 
+				<div className="pagination">
+					<button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
+					{Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+						<button key={page} onClick={() => handlePageChange(page)} className={currentPage === page ? 'active': ''}>
+							{page}
+						</button>
+					))}
+					<button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
+				</div>
+			}
+			<div className="book-list">
+				{currentItems.map(item => (
+					<BookCard key={fromDB ? item.book.olid : item.key.substring(7)} listEntry={fromDB ? item : null} book={fromDB ? item.book : item} setSelectedEntry={setSelectedEntry} setSelectedBook={setSelectedBook} setShowDetails={setShowDetails} />
 				))}
-				<button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
-			</div>}
-			
-			{currentItems.map(item => (
-				<BookCard key={fromDB ? item.book.olid : item.key.substring(7)} listEntry={fromDB ? item : null} book={fromDB ? item.book : item} setSelectedEntry={setSelectedEntry} setSelectedBook={setSelectedBook} setShowDetails={setShowDetails} />
-			))}
 
-			{showDetails && <BookDetails entry={selectedEntry} setSelectedEntry={setSelectedEntry} book={selectedBook} setShowDetails={setShowDetails} fromDB={fromDB} removeEntry={removeEntry} />}
-		</div>
+				{showDetails && <BookDetails entry={selectedEntry} setSelectedEntry={setSelectedEntry} book={selectedBook} setShowDetails={setShowDetails} fromDB={fromDB} removeEntry={removeEntry} />}
+			</div>
+		</>
 	)
 }
 

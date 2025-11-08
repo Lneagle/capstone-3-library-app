@@ -91,37 +91,39 @@ function ListContainer() {
 		<>
 			<NavBar />
 
-			<h1>{list_type == 'have-read' ? 'Books I Have Read' : 'Books I Want To Read'}</h1>
+			<main>
+				<h1>{list_type == 'have-read' ? 'Books I Have Read' : 'Books I Want To Read'}</h1>
 
-			{isLoading && <p className="message">Fetching data...</p>}
-			{error && <p className="error">{error.message}</p>}
+				{isLoading && <p className="message">Fetching data...</p>}
+				{error && <p className="error">{error.message}</p>}
 
-			{sortedEntries && 
-				<>
-					<form>
-						<label htmlFor="sort">Sort by:</label>
-						<select id="sort" value={selectedSort} onChange={handleSortChange}>
-							<option value=''>--Sort Type--</option>
-							<option value='title'>Title</option>
-							<option value='author'>Author (full name)</option>
-							<option value='rating'>Rating (high to low)</option>
-						</select>
+				{sortedEntries && 
+					<>
+						<form>
+							<label htmlFor="sort">Sort by:</label>
+							<select id="sort" value={selectedSort} onChange={handleSortChange}>
+								<option value=''>--Sort Type--</option>
+								<option value='title'>Title</option>
+								<option value='author'>Author (full name)</option>
+								<option value='rating'>Rating (high to low)</option>
+							</select>
 
-						<label htmlFor="search">Search</label>
-						<input type="text" id="search" value={searchTerm} onChange={handleSearchChange} />
-						
+							<label htmlFor="search">Search</label>
+							<input type="text" id="search" value={searchTerm} onChange={handleSearchChange} />
+							
 
-						<label htmlFor="per-page">Results per page:</label>
-						<select id="per-page" value={numResults} onChange={handleNumResultsChange}>
-							<option value={20}>20</option>
-							<option value={30}>30</option>
-							<option value={40}>40</option>
-							<option value={50}>50</option>
-						</select>
-					</form>
-					<BookList items={sortedEntries} setEntries={setEntries} numResults={numResults} fromDB={true} />
-				</>
-			}
+							<label htmlFor="per-page">Results per page:</label>
+							<select id="per-page" value={numResults} onChange={handleNumResultsChange}>
+								<option value={20}>20</option>
+								<option value={30}>30</option>
+								<option value={40}>40</option>
+								<option value={50}>50</option>
+							</select>
+						</form>
+						<BookList items={sortedEntries} setEntries={setEntries} numResults={numResults} fromDB={true} />
+					</>
+				}
+			</main>
 		</>
 	)
 }

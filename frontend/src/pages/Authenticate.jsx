@@ -60,8 +60,10 @@ function Authenticate({ type }) {
 	}
 
 	return (
-		<>
-      <form onSubmit={handleSubmit}>
+		<main>
+			<h1 className="logo">MyLibrary</h1>
+			<p>Welcome to MyLibrary!  Keep track of books you've read or books you want to read.  Happy reading!</p>
+			<form className="vertical" onSubmit={handleSubmit}>
 				<label htmlFor="username">Username:</label>
 				<input id="username" type="text" value={username} onChange={handleUserChange} />
 				<label htmlFor="password">Password:</label>
@@ -72,11 +74,11 @@ function Authenticate({ type }) {
 						<input id="password-verify" type="password" value={passwordVerify} onChange={handlePasswordVerifyChange} required />
 					</>
 				}
-				<input type="submit" value="submit" />
-				{type == 'login' ? <Link to='/signup'>New user? Sign up here</Link> : <Link to='/login'>Returning user? Log in here</Link>}
+				<input type="submit" value="Submit" />
+				{error && <p className="error">{error}</p>}
+				<p>{type == 'login' ? <Link to='/signup'>New user? Sign up here</Link> : <Link to='/login'>Returning user? Log in here</Link>}</p>
 			</form>
-			{error && <p className="error">{error}</p>}
-		</>
+		</main>
 	)
 }
 

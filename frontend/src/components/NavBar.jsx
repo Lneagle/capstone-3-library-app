@@ -13,10 +13,10 @@ function NavBar() {
 	
   return (
     <nav className="navbar">
-      <NavLink to="/">Search Books</NavLink>
-      <NavLink to="/have-read">Books I Have Read</NavLink>
+      <NavLink to="/">Search Books</NavLink>|
+      <NavLink to="/have-read">Books I Have Read</NavLink>|
       <NavLink to="/want-to-read">Books I Want To Read</NavLink>
-			<button onClick={handleLogout}>Logout</button>
+			<a className="logout" onClick={handleLogout}>Logout</a>
     </nav>
   );
 }
