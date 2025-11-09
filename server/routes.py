@@ -145,7 +145,7 @@ class ListEntriesByList(Resource):
 			return error_response('List type must be "have-read" or "want-to-read"', 400)
 		
 		current_user = get_jwt_identity()
-		if user_id != current_user:
+		if str(user_id) != current_user:
 			return error_response('Forbidden', 403)
 		
 		list_entries = ListEntry.query.filter_by(user_id=user_id, list_type=list_type).all()
@@ -160,7 +160,7 @@ class ListEntriesByList(Resource):
 			return error_response('List type must be "have-read" or "want-to-read"', 400)
 		
 		current_user = get_jwt_identity()
-		if user_id != current_user:
+		if str(user_id) != current_user:
 			return error_response('Forbidden', 403)
 
 		request_json = request.get_json()

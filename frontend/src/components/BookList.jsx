@@ -25,6 +25,14 @@ function BookList({ items, setEntries, numResults, fromDB }) { // items are book
 
 	return (
 		<>
+			<div className="book-list">
+				{currentItems.map(item => (
+					<BookCard key={fromDB ? item.book.olid : item.key.substring(7)} listEntry={fromDB ? item : null} book={fromDB ? item.book : item} setSelectedEntry={setSelectedEntry} setSelectedBook={setSelectedBook} setShowDetails={setShowDetails} />
+				))}
+
+				{showDetails && <BookDetails entry={selectedEntry} setSelectedEntry={setSelectedEntry} book={selectedBook} setShowDetails={setShowDetails} fromDB={fromDB} removeEntry={removeEntry} />}
+			</div>
+
 			{totalPages > 1 && 
 				<div className="pagination">
 					<button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
@@ -36,13 +44,6 @@ function BookList({ items, setEntries, numResults, fromDB }) { // items are book
 					<button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
 				</div>
 			}
-			<div className="book-list">
-				{currentItems.map(item => (
-					<BookCard key={fromDB ? item.book.olid : item.key.substring(7)} listEntry={fromDB ? item : null} book={fromDB ? item.book : item} setSelectedEntry={setSelectedEntry} setSelectedBook={setSelectedBook} setShowDetails={setShowDetails} />
-				))}
-
-				{showDetails && <BookDetails entry={selectedEntry} setSelectedEntry={setSelectedEntry} book={selectedBook} setShowDetails={setShowDetails} fromDB={fromDB} removeEntry={removeEntry} />}
-			</div>
 		</>
 	)
 }
