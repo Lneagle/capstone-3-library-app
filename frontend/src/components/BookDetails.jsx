@@ -112,6 +112,14 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 		}
 	}
 
+	let rating = null;
+
+	if (book.rating) {
+		rating = book.rating;
+	} else if (book.ratings_average) {
+		rating = book.ratings_average;
+	}
+
 	return (
 		<div className="modal-container">
 			<div className="modal">
@@ -124,7 +132,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 							<h3>{details.title}</h3>
 							<img src={details.covers ? `https://covers.openlibrary.org/b/id/${details.covers[0]}-M.jpg` : (book.cover_image ? book.cover_image : 'https://placehold.co/180x290.png?text=No%20Image')} alt={`${details.title} cover image`} />
 							<p>{book.author_name ? book.author_name.join(', ') : book.authors.map((author) => author.name).join(', ')}</p>
-							{book.rating &&<p>Rating: {book.rating.toFixed(2)}</p>}
+							{rating &&<p>Rating: {rating.toFixed(2)}</p>}
 						</div>
 						<div>
 							{details.description && <p>{typeof details.description == 'string' ? details.description : details.description.value}</p>}
