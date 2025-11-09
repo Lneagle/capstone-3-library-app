@@ -50,7 +50,7 @@ function Authenticate({ type }) {
 				navigate('/');
 			} catch (err) {
 				console.log(err);
-				setError(err);
+				setError(err.message);
 			} finally {
 				setUsername('');
 				setPassword('');
