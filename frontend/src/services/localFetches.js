@@ -8,7 +8,12 @@ export const fetchWantToRead = async (context) => {
 			}
 		});
 		if (!response.ok) {
-			throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
+			if (response.status == '404') {
+				throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
+			} else {
+				const err = await response.json();
+				throw new Error(err.error.message);
+			}
 		}
 		const data = await response.json();
 		return data;
@@ -26,7 +31,12 @@ export const fetchHaveRead = async (context) => {
 			}
 		});
 		if (!response.ok) {
-			throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
+			if (response.status == '404') {
+				throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
+			} else {
+				const err = await response.json();
+				throw new Error(err.error.message);
+			}
 		}
 		const data = await response.json();
 		return data;
@@ -47,7 +57,8 @@ export const postToList = async (list_type, body, context) => {
 			body: body,
 		});
 		if (!response.ok) {
-			throw new Error(`Could not create entry for list ${list_type}`);
+			const err = await response.json();
+			throw new Error(err.error.message);
 		}
 		const data = await response.json();
 		return data;
@@ -68,7 +79,8 @@ export const patchListEntry = async (list_type, entry_id, body, context) => {
 			body: body,
 		});
 		if (!response.ok) {
-			throw new Error(`Could not edit entry ${entry_id}`);
+			const err = await response.json();
+			throw new Error(err.error.message);
 		}
 		const data = await response.json();
 		return data;
@@ -87,7 +99,8 @@ export const deleteListEntry = async(list_type, entry_id, context) => {
 			},
 		});
 		if (!response.ok) {
-			throw new Error(`Could not delete entry`);
+			const err = await response.json();
+			throw new Error(err.error.message);
 		}
 	} catch (error) {
 		console.error("Error:", error);
@@ -103,7 +116,8 @@ export const fetchDBBook = async (id, context) => {
 			}
 		});
 		if (!response.ok) {
-			throw new Error(`Could not fetch book ${id}`);
+			const err = await response.json();
+			throw new Error(err.error.message);
 		}
 		const data = await response.json();
 		return data;
@@ -123,7 +137,8 @@ export const signUp = async (body) => {
 			body: body,
 		});
 		if (!response.ok) {
-			throw new Error('Could not create account');
+			const err = await response.json();
+			throw new Error(err.error.message);
 		}
 		const data = await response.json();
 		return data;
@@ -143,7 +158,8 @@ export const login = async (body) => {
 			body: body,
 		});
 		if (!response.ok) {
-			throw new Error('Could not log in');
+			const err = await response.json();
+			throw new Error(err.error.message);
 		}
 		const data = await response.json();
 		return data;
@@ -161,8 +177,8 @@ export const getIdentity = async (token) => {
 			}
 		});
 		if (!response.ok) {
-			console.log(response);
-			throw new Error('Could not identify user');
+			const err = await response.json();
+			throw new Error(err.error.message);
 		}
 		const data = await response.json();
 		return data;

@@ -73,6 +73,11 @@ h1.logo {
 	font-weight: bold;
 }
 
+p.error {
+	color: red;
+	font-weight: bold;
+}
+
 form input, form select {
 	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 	color: var(--text-color);
