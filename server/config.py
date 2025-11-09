@@ -19,7 +19,7 @@ app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.json.compact = False
 
 metadata = MetaData(naming_convention={
-  "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+	"fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
 })
 db = SQLAlchemy(metadata=metadata)
 

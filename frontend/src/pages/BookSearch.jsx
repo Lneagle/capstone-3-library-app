@@ -43,7 +43,6 @@ function BookSearch() {
 			if (bookSubject) {
 				searchString += `subject=${bookSubject.replace(' ', '+')}&`;
 			}
-			//searchString += `limit=${numResults}&page=1`;
 			const data = await fetchSearchResults(searchString);
 			setSearchResults(data);
 		} catch (err) {

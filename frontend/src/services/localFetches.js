@@ -1,117 +1,116 @@
 const API_URL = import.meta.env.VITE_API_URL;
-//const USER_ID = 1; 
 
 export const fetchWantToRead = async (context) => {
-  try {
-    const response = await fetch(`/api/users/${context.user.id}/lists/want-to-read/entries`, {
+	try {
+		const response = await fetch(`/api/users/${context.user.id}/lists/want-to-read/entries`, {
 			headers: {
 				Authorization: `Bearer ${context.token}`,
 			}
 		});
-    if (!response.ok) {
-      throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
-  }
+		if (!response.ok) {
+			throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error fetching books:", error);
+		throw error;
+	}
 }
 
 export const fetchHaveRead = async (context) => {
-  try {
-    const response = await fetch(`/api/users/${context.user.id}/lists/have-read/entries`, {
+	try {
+		const response = await fetch(`/api/users/${context.user.id}/lists/have-read/entries`, {
 			headers: {
 				Authorization: `Bearer ${context.token}`,
 			}
 		});
-    if (!response.ok) {
-      throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
-  }
+		if (!response.ok) {
+			throw new Error(`There are no books on your list yet! Add some from the Search Books page.`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error fetching books:", error);
+		throw error;
+	}
 }
 
 export const postToList = async (list_type, body, context) => {
 	try {
 		const response = await fetch(`/api/users/${context.user.id}/lists/${list_type}/entries`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
 				Authorization: `Bearer ${context.token}`,
-      },
-      body: body,
-    });
-    if (!response.ok) {
-      throw new Error(`Could not create entry for list ${list_type}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
+			},
+			body: body,
+		});
+		if (!response.ok) {
+			throw new Error(`Could not create entry for list ${list_type}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error:", error);
+		throw error;
+	}
 }
 
 export const patchListEntry = async (list_type, entry_id, body, context) => {
 	try {
 		const response = await fetch(`/api/users/${context.user.id}/lists/${list_type}/entries/${entry_id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
 				Authorization: `Bearer ${context.token}`,
-      },
-      body: body,
-    });
-    if (!response.ok) {
-      throw new Error(`Could not edit entry ${entry_id}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
+			},
+			body: body,
+		});
+		if (!response.ok) {
+			throw new Error(`Could not edit entry ${entry_id}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error:", error);
+		throw error;
+	}
 }
 
 export const deleteListEntry = async(list_type, entry_id, context) => {
-  try {
-    const response = await fetch(`/api/users/${context.user.id}/lists/${list_type}/entries/${entry_id}`, {
-      method: "DELETE",
+	try {
+		const response = await fetch(`/api/users/${context.user.id}/lists/${list_type}/entries/${entry_id}`, {
+			method: "DELETE",
 			headers: {
 				Authorization: `Bearer ${context.token}`,
 			},
-    });
-    if (!response.ok) {
-      throw new Error(`Could not delete entry`);
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
+		});
+		if (!response.ok) {
+			throw new Error(`Could not delete entry`);
+		}
+	} catch (error) {
+		console.error("Error:", error);
+		throw error;
+	}
 };
 
 export const fetchDBBook = async (id, context) => {
 	try {
-    const response = await fetch(`/api/books/${id}`, {
+		const response = await fetch(`/api/books/${id}`, {
 			headers: {
 				Authorization: `Bearer ${context.token}`,
 			}
 		});
-    if (!response.ok) {
-      throw new Error(`Could not fetch book ${id}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching book:", error);
-    throw error;
-  }
+		if (!response.ok) {
+			throw new Error(`Could not fetch book ${id}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error fetching book:", error);
+		throw error;
+	}
 }
 
 export const signUp = async (body) => {
@@ -124,14 +123,14 @@ export const signUp = async (body) => {
 			body: body,
 		});
 		if (!response.ok) {
-      throw new Error('Could not create account');
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error registering:", error);
-    throw error;
-  }
+			throw new Error('Could not create account');
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error registering:", error);
+		throw error;
+	}
 }
 
 export const login = async (body) => {
@@ -144,14 +143,14 @@ export const login = async (body) => {
 			body: body,
 		});
 		if (!response.ok) {
-      throw new Error('Could not log in');
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error logging in:", error);
-    throw error;
-  }
+			throw new Error('Could not log in');
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error logging in:", error);
+		throw error;
+	}
 }
 
 export const getIdentity = async (token) => {
@@ -163,12 +162,12 @@ export const getIdentity = async (token) => {
 		});
 		if (!response.ok) {
 			console.log(response);
-      throw new Error('Could not identify user');
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
+			throw new Error('Could not identify user');
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Error:", error);
+		throw error;
+	}
 }

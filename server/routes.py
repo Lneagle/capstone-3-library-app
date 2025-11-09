@@ -95,7 +95,6 @@ class Signup(Resource):
 class WhoAmI(Resource):
 	def get(self):
 		user_id = get_jwt_identity()
-		#user_id = 1
 
 		user = User.query.filter_by(id=user_id).first()
 		return success_response(UserSchema(exclude=('list_entries',)).dump(user))
@@ -145,12 +144,14 @@ class ListEntriesByList(Resource):
 		if list_type not in ['have-read', 'want-to-read']:
 			return error_response('List type must be "have-read" or "want-to-read"', 400)
 		
+		current_user = get_jwt_identity()
+		if user_id != current_user:
+			return error_response('Forbidden', 403)
+		
 		list_entries = ListEntry.query.filter_by(user_id=user_id, list_type=list_type).all()
 
 		if not list_entries:
 			return error_response('No entries found', 404)
-		
-		# Do user_id check
 
 		return success_response([ListEntrySchema().dump(entry) for entry in list_entries])
 	
@@ -158,7 +159,9 @@ class ListEntriesByList(Resource):
 		if list_type not in ['have-read', 'want-to-read']:
 			return error_response('List type must be "have-read" or "want-to-read"', 400)
 		
-		# Do user_id check
+		current_user = get_jwt_identity()
+		if user_id != current_user:
+			return error_response('Forbidden', 403)
 
 		request_json = request.get_json()
 
@@ -179,6 +182,10 @@ class ListEntriesByList(Resource):
 				book = create_book_response
 			else:
 				return create_book_response
+		else:
+			already_exists = ListEntry.query.filter_by(user_id = user_id, book_id=book.id).first()
+			if already_exists:
+				return error_response('List entry already exists', 409)
 		
 		try:
 			new_entry = ListEntry(list_type=list_type)
@@ -203,14 +210,18 @@ class ListEntryById(Resource):
 		
 		list_entry = ListEntry.query.filter_by(id=entry_id).first()
 
-		# if not list_entry
+		if not list_entry:
+			return error_response('List entry not found', 404)
 
 		if list_entry.user_id != user_id:
 			return error_response('User not authorized to view this entry', 403)
 		
+		allowed_attrs = ['list_type', 'notes']
+
 		try:
 			for attr in request_json:
-				#verify that attr can be changed
+				if attr not in allowed_attrs:
+					return error_response(f'Cannot update {attr}', 403)
 				setattr(list_entry, attr, request_json[attr])
 			db.session.commit()
 			return success_response(ListEntrySchema().dump(list_entry))
@@ -224,7 +235,8 @@ class ListEntryById(Resource):
 		
 		list_entry = ListEntry.query.filter_by(id=entry_id).first()
 
-		# if not list_entry
+		if not list_entry:
+			return error_response('List entry not found', 404)
 		
 		if list_entry.user_id != user_id:
 			return error_response('User not authorized to delete this entry', 403)

@@ -114,7 +114,7 @@ function BookDetails({ entry, setSelectedEntry, book, setShowDetails, fromDB, re
 
 	return (
 		<div className="modal-container">
-      <div className="modal">
+			<div className="modal">
 				<button className="close" onClick={handleClose}>X</button>
 				{isLoading && <p className="message">Fetching data...</p>}
 				{error && <p className="error">{error.message}</p>}

@@ -1,265 +1,266 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.2;
-  font-weight: 400;
-  --bg-color: #C65D3B;
-  --fg-color: #E6CBA8;
-  --accent-color: #D9A66B;
-  --text-color: #50301b;
-  --link-color: #C65D3B;
-  --button-color: #A65E2E;
+	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.2;
+	font-weight: 400;
+	--bg-color: #C65D3B;
+	--fg-color: #E6CBA8;
+	--accent-color: #D9A66B;
+	--text-color: #50301b;
+	--link-color: #C65D3B;
+	--button-color: #A65E2E;
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 2em;
-  padding: 0;
-  min-height: 100vh;
-  box-sizing: border-box;
-  text-align: center;
-  background-color: var(--fg-color);
-  color: var(--text-color)
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 0;
+	min-height: 100vh;
+	box-sizing: border-box;
+	text-align: center;
+	background-color: var(--fg-color);
+	color: var(--text-color)
 }
 
 a {
-  font-weight: 500;
-  color: var(--link-color);
-  text-decoration: inherit;
+	font-weight: 500;
+	color: var(--link-color);
+	text-decoration: inherit;
 }
 a:hover {
-  color: #ec7147;
+	color: #ec7147;
 }
 
 body {
-  margin: 0;
-  /* display: flex;
-  place-items: center;*/
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--bg-color);
+	margin: 0;
+	padding: 0 2em;
+	/* display: flex;
+	place-items: center;*/
+	min-width: 320px;
+	min-height: 100vh;
+	background-color: var(--bg-color);
 }
 
 nav {
-  background-color: var(--accent-color);
-  padding: 1.5em;
+	background-color: var(--accent-color);
+	padding: 1.5em;
 }
 
 nav a {
-  color:#b84c28;
-  padding: 0 0.5em;
+	color:#b84c28;
+	padding: 0 0.5em;
 }
 
 nav a.active {
-  color: var(--text-color)
+	color: var(--text-color)
 }
 
 nav a.logout {
-  float: right;
-  cursor: pointer;
+	float: right;
+	cursor: pointer;
 }
 
 main {
-  padding: 2em;
+	padding: 2em;
 }
 
 h1 {
-  font-size: 2em;
-  line-height: 1.1;
+	font-size: 2em;
+	line-height: 1.1;
 }
 
 h1.logo {
-  font-family: Garamond, Georgia, 'Times New Roman', Times, serif;
-  font-weight: bold;
+	font-family: Garamond, Georgia, 'Times New Roman', Times, serif;
+	font-weight: bold;
 }
 
 form input, form select {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  color: var(--text-color);
-  padding-block: 1px;
-  padding-inline: 2px;
-  margin-right: 0.75em;
+	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	color: var(--text-color);
+	padding-block: 1px;
+	padding-inline: 2px;
+	margin-right: 0.75em;
 }
 
 form label {
-  margin-right: 0.25em;
+	margin-right: 0.25em;
 }
 
 form.vertical {
-  width: 30%;
-  margin: 2em auto;
-  text-align: left;
-  padding: 1em;
-  border: 1px solid var(--text-color);
-  border-radius: 0.5em;
-  background-color: #fff;
+	width: 30%;
+	margin: 2em auto;
+	text-align: left;
+	padding: 1em;
+	border: 1px solid var(--text-color);
+	border-radius: 0.5em;
+	background-color: #fff;
 }
 
 form.vertical > * {
-  width: 100%;
-  box-sizing: border-box;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 form.vertical input {
-  margin-bottom: 1em;
-  margin-top: 0.25em;
+	margin-bottom: 1em;
+	margin-top: 0.25em;
 }
 
 form.vertical p:last-child {
-  margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.4em 0.5em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  line-height: 1;
-  background-color: var(--button-color);
-  color: #fff;
-  cursor: pointer;
-  transition: border-color 0.25s;
+	border-radius: 8px;
+	border: 1px solid transparent;
+	padding: 0.4em 0.5em;
+	font-size: 1em;
+	font-weight: 500;
+	font-family: inherit;
+	line-height: 1;
+	background-color: var(--button-color);
+	color: #fff;
+	cursor: pointer;
+	transition: border-color 0.25s;
 }
 button:hover {
-  border-color: var(--text-color);
+	border-color: var(--text-color);
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+	outline: 4px auto -webkit-focus-ring-color;
 }
 
 .pagination {
-  margin: 2em 0;
+	margin: 2em 0;
 }
 
 .pagination button {
-  background-color: transparent;
-  border: 1px solid var(--text-color);
-  border-radius: 4px;
-  color: var(--text-color);
-  margin-right: 0.25em;
+	background-color: transparent;
+	border: 1px solid var(--text-color);
+	border-radius: 4px;
+	color: var(--text-color);
+	margin-right: 0.25em;
 }
 
 .pagination button:disabled {
-  color: #666;
-  background-color: #ddd;
-  border-color: #666;
+	color: #666;
+	background-color: #ddd;
+	border-color: #666;
 }
 
 .pagination button.active {
-  border: 1px solid var(--button-color);
-  color: #fff;
-  background-color: var(--button-color);
+	border: 1px solid var(--button-color);
+	color: #fff;
+	background-color: var(--button-color);
 }
 
 .book-list {
-  display: grid;
-  grid-template-columns: 20% 20% 20% 20% 20%;
+	display: grid;
+	grid-template-columns: 20% 20% 20% 20% 20%;
 }
 
 .book-card {
-  padding: 0 0.75em;
-  margin-bottom: 2em;
+	padding: 0 0.75em;
+	margin-bottom: 2em;
 }
 
 .book-card .title {
-  height: 3.5em;
-  line-height: 1.1;
+	height: 3.5em;
+	line-height: 1.1;
 }
 
 .book-card .title h3 {
-  margin: 0;
+	margin: 0;
 }
 
 .book-card .image {
-  height: 22em;
-  overflow: hidden;
+	height: 22em;
+	overflow: hidden;
 }
 
 .book-card img {
-  width: 100%;
+	width: 100%;
 }
 
 .book-card .info {
-  height: 4.5em;
+	height: 4.5em;
 }
 
 .book-card .info p {
-  margin: 0.5em 0;
-  line-height: 1;
+	margin: 0.5em 0;
+	line-height: 1;
 }
 
 .book-card .view-details {
-  height: 3em;
+	height: 3em;
 }
 
 .modal-container {
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.4);
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal {
-  border-radius: 5px;
-  padding: 0.5em 2em 1.5em 2em;
-  background-color: #fff;
-  text-align: left;
-  width: 50%;
+	border-radius: 5px;
+	padding: 0.5em 2em 1.5em 2em;
+	background-color: #fff;
+	text-align: left;
+	width: 50%;
 }
 
 .modal .content {
-  display: flex;
-  column-gap: 1em;
+	display: flex;
+	column-gap: 1em;
 }
 
 .modal .content div:first-child {
-  max-width: 40%;
+	max-width: 40%;
 }
 
 .modal button.close {
-  border: none;
-  padding: 0;
-  background-color: transparent;
-  text-align: right;
-  float: right;
-  color: var(--text-color)
+	border: none;
+	padding: 0;
+	background-color: transparent;
+	text-align: right;
+	float: right;
+	color: var(--text-color)
 }
 
 .modal .modal-action button {
-  margin-right: 0.5em;
+	margin-right: 0.5em;
 }
 
 textarea#bookNotes {
-  width: 100%;
-  margin-bottom: 0.5em;
+	width: 100%;
+	margin-bottom: 0.5em;
 }
 
 @media (max-width: 1200px) {
-  .book-card .image {
-    height: 18em;
-  }
+	.book-card .image {
+		height: 18em;
+	}
 
-  .book-card .info {
-    height: 5em;
-  }
+	.book-card .info {
+		height: 5em;
+	}
 }
 
 @media (max-width: 1090px) {
-  .book-card .title {
-    height: 4.5em;
-  }
+	.book-card .title {
+		height: 4.5em;
+	}
 }
 
 @media (max-width: 980px) {
-  .book-card .image {
-    height: 15em;
-  }
+	.book-card .image {
+		height: 15em;
+	}
 }

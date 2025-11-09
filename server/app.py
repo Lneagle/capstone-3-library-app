@@ -12,4 +12,4 @@ api.add_resource(ListEntriesByList, '/users/<int:user_id>/lists/<string:list_typ
 api.add_resource(ListEntryById, '/users/<int:user_id>/lists/<string:list_type>/entries/<int:entry_id>', endpoint='/users/<int:user_id>/lists/<string:list_type>/entries/<int:entry_id>')
 
 if __name__ == '__main__':
-  app.run(port=5555, debug=True)
+	app.run(port=5555, debug=True)

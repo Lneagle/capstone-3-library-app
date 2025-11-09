@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
 					setUser(response.data);
 				} catch (error) {
 					console.error('ERROR:', error);
-					//localStorage.removeItem('token');
 				}
 			}
 		};

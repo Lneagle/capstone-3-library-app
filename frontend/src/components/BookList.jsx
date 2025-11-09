@@ -14,8 +14,8 @@ function BookList({ items, setEntries, numResults, fromDB }) { // items are book
 	const currentItems = items.slice(startIndex, endIndex);
 
 	const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+		setCurrentPage(pageNumber);
+	};
 
 	const removeEntry = (id) => {
 		setEntries(items.filter(item => {
