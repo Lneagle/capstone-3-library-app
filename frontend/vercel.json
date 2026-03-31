@@ -2,12 +2,12 @@
 	"$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://capstone-3-library-app.vercel.app"
+      "source": "/api/:path",
+      "destination": "https://capstone-3-library-app.vercel.app/:path"
     },
 		{
-      "source": "/auth/(.*)",
-      "destination": "https://capstone-3-library-app.vercel.app"
+      "source": "/auth/:path",
+      "destination": "https://capstone-3-library-app.vercel.app/:path"
     }
   ]
 }
