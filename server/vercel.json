@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://capstone-3-library-app.vercel.app"
+    },
+		{
+      "source": "/auth/(.*)",
+      "destination": "https://capstone-3-library-app.vercel.app"
+    }
+  ]
+}
